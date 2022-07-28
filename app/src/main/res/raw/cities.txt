@@ -1,0 +1,16 @@
+Nur-Sultan/Нур-Султан
+Almaty/Алматы
+Aktobe/Актобе
+Aktau/Актау
+Shymkent/Шымкент
+Baikonur/Байконур
+Kostanay/Костанай
+Ust-Kamenogorsk/Усть-Каменогорск
+Karagandy/Караганды
+Taraz/Тараз
+Turkestan/Туркестан
+Petropavl/Петропавловск
+Semey/Семей
+Kokshetau/Кокшетау
+Pavlodar/Павлодар
+Kyzylorda/Кызылорда

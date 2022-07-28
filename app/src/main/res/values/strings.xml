@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">ForecastApp</string>
+    <string name="default_setting_name">default</string>
+    <string name="temp">%s℃</string>
+    <string name="feels_like">Чувствуется как\n%s℃</string>
+    <string name="min_temp">Минимальная температура\n%s℃</string>
+    <string name="max_temp">Максимальная температура\n%s℃</string>
+    <string name="humidity">Влажность\n%s%%</string>
+    <string name="pressure">Давление\n%sгПа</string>
+    <string name="wind_speed">Скорость ветра\n%sм/с</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
