@@ -14,10 +14,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bbj.myapplication.R
+import com.bbj.myapplication.data.SharedPreferenceClient
 import com.bbj.myapplication.data.WeatherModel
 import com.bbj.myapplication.databinding.MainForecastFragmentBinding
 import com.bbj.myapplication.util.Constants
 import com.bbj.myapplication.util.DensityUtil
+import com.bbj.myapplication.util.NameLanguage
 import java.util.*
 
 class MainForecastFragment : Fragment() {
@@ -28,13 +30,14 @@ class MainForecastFragment : Fragment() {
     private var liveForecast : LiveData<WeatherModel>? = null
     val distance by lazy { DensityUtil.dip2px(requireContext(), 114f).toFloat() }
 
+    val prefClient by lazy {SharedPreferenceClient(requireContext())}
 
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = MainForecastFragmentBinding.inflate(inflater,container,false)
         return binding.root
     }
@@ -79,12 +82,9 @@ class MainForecastFragment : Fragment() {
 
         val viewModel : MainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
         liveForecast = viewModel.liveForecast
-        liveForecast?.observe(viewLifecycleOwner, Observer {
+        liveForecast?.observe(viewLifecycleOwner){
             binding.run {
-                city.text = requireActivity()
-                    .getSharedPreferences(Constants.prefName, Context.MODE_PRIVATE)
-                    .getString(Constants.prefCityKey,Constants.nurSultan)!!
-                    .split("/")[1]
+                city.text = prefClient.getCityName(NameLanguage.RU)
                 temp.setText(getString(R.string.temp,it.temp.toString()))
                 if (it.temp.toInt() == 404)
                     Toast.makeText(requireContext(),"Не удалось получить данные\nиз сети",Toast.LENGTH_LONG).show()
@@ -96,7 +96,7 @@ class MainForecastFragment : Fragment() {
                 windSpeed.text = getString(R.string.wind_speed,it.windSpeed.toString())
                 pressure.text = getString(R.string.pressure,it.pressure.toString())
             }
-        })
+        }
 
         viewModel.getTodayForecast()
     }
@@ -104,7 +104,6 @@ class MainForecastFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-
     }
 
     fun setAnimToTextSwitcher(vararg textSwitchers: TextSwitcher){

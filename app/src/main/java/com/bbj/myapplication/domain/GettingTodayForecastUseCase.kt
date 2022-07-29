@@ -1,9 +1,9 @@
 package com.bbj.myapplication.domain
 
-import android.content.SharedPreferences
 import com.bbj.myapplication.data.WeatherModel
+import javax.inject.Inject
 
-class GettingTodayForecastUseCase(private val repository: ForecastRepository) {
+class GettingTodayForecastUseCase @Inject constructor(private val repository: ForecastRepository) {
 
     suspend fun execute(cityName : String) : WeatherModel{
         return repository.getTodayWeatherForecast(cityName)

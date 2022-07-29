@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.Animation
@@ -44,8 +45,6 @@ class MainActivity : AppCompatActivity() {
         )
         val transitionToPrimary = TransitionDrawable(tabToPrimary)
 
-
-        ColorDrawable()
         val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         viewModel.liveGif.observe(this) {
             if (it != 0) {
@@ -82,7 +81,7 @@ class MainActivity : AppCompatActivity() {
         tabLayout.getTabAt(0)?.setCustomView(customTab1)
         tabLayout.getTabAt(1)?.setCustomView(customTab2)
 
-        tabLayout?.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 if (tab != null) {
                     when (tab.position) {
@@ -109,7 +108,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun returnToFirstPage() {
-        (gifView.drawable as GifDrawable).stop()
+        if (gifView.drawable != null) {
+            (gifView.drawable as GifDrawable).stop()
+        }
         gifView.visibility = GifImageView.GONE
         handlerMain.removeCallbacksAndMessages(null)
         viewPager.currentItem = 0
@@ -121,8 +122,8 @@ class MainActivity : AppCompatActivity() {
         gifView.alpha = 0.0f
         gifView.visibility = GifImageView.VISIBLE
         gifView.animate().alpha(1.0f)
-        gifDrawable.start()
         gifDrawable.loopCount = 0
+        gifDrawable.start()
         handlerMain.postDelayed({
             gifView.startAnimation(fadeOutAnim)
             gifView.animation.setAnimationListener(object :

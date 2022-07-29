@@ -9,8 +9,9 @@ import com.bbj.myapplication.domain.ForecastRepository
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
-class ForecastRepositoryImpl
+class ForecastRepositoryImpl @Inject constructor
     (private val databaseDAO: DatabaseDAO, private val retrofitDAO: RetrofitDAO?) :
     ForecastRepository {
 
@@ -54,15 +55,6 @@ class ForecastRepositoryImpl
         return resultWeatherModel
     }
 
-    override suspend fun delete(date: Date) {
-        val formattedDate = dateFormatter.format(date)
-        databaseDAO.delete(formattedDate)
-    }
-
-    override suspend fun update(date: Date, cityName: String, weatherModel: WeatherModel) {
-        val formattedDate = dateFormatter.format(date)
-        databaseDAO.insert(DatabaseModel(formattedDate, cityName, weatherModel, 0))
-    }
 
     private suspend fun getWeatherModelByRetrofit(cityName: String): WeatherModel {
         val response = retrofitDAO?.getForecastFromWeb(cityName)
@@ -75,7 +67,7 @@ class ForecastRepositoryImpl
         return defaultWeatherModel
     }
 
-    fun getWeatherModel(webForecast: WebForecastModel): WeatherModel {
+    private fun getWeatherModel(webForecast: WebForecastModel): WeatherModel {
         return WeatherModel(
             temp = webForecast.main.temp,
             tempFeelsLike = webForecast.main.feels_like,

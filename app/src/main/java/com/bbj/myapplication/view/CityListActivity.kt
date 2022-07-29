@@ -3,21 +3,17 @@ package com.bbj.myapplication.view
 import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.view.View
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.bbj.myapplication.R
+import com.bbj.myapplication.data.SharedPreferenceClient
 import com.bbj.myapplication.util.Constants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.io.Reader
 
 class CityListActivity : AppCompatActivity() {
 
@@ -31,15 +27,14 @@ class CityListActivity : AppCompatActivity() {
         val recyclerListOfCity = findViewById<RecyclerView>(R.id.listOfCity)
         val adapter = CityListAdapter(this, object : RecyclerItemClickListener {
             override fun onClick(value: String, position: Int) {
-                getSharedPreferences(Constants.prefName, MODE_PRIVATE).edit()
-                    .putString(Constants.prefCityKey,value).apply()
+                SharedPreferenceClient(this@CityListActivity).setCityName(value)
                 setResult(Activity.RESULT_OK)
                 finish()
             }
         })
 
         val dividerItemDecoration = DividerItemDecoration(this,RecyclerView.VERTICAL)
-        dividerItemDecoration.setDrawable(resources.getDrawable(R.drawable.list_divider))
+        dividerItemDecoration.setDrawable(resources.getDrawable(R.drawable.list_divider,theme))
         recyclerListOfCity.addItemDecoration(dividerItemDecoration)
 
         lifecycleScope.launch {

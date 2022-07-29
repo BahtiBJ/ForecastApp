@@ -28,7 +28,6 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val viewModel : MainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
 
-
         val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
             if (it.resultCode == Activity.RESULT_OK){
                 Handler(Looper.getMainLooper()).postDelayed({
@@ -47,9 +46,4 @@ class SettingsFragment : Fragment() {
     }
 
 
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SettingsFragment()
-    }
 }
