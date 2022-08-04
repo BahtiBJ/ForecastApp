@@ -43,6 +43,7 @@ class SettingsFragment : Fragment() {
             launcher.launch(intent)
             requireActivity().overridePendingTransition(R.anim.falling,R.anim.fadding)
         }
+
     }
 
 

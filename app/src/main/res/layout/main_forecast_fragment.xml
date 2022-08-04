@@ -30,8 +30,8 @@
 
     </androidx.cardview.widget.CardView>
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/main_scroll_view"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="10dp"
@@ -40,86 +40,87 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cardWithCity">
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/main_scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical">
-
-            <TextSwitcher
-                android:id="@+id/temp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center">
-
-                <TextView
-                    style="@style/MYText"
-                    android:text="+36℃"
-                    android:textSize="65sp" />
-
-                <TextView
-                    style="@style/MYText"
-                    android:textSize="65sp" />
-
-            </TextSwitcher>
-
-            <View
-                style="@style/Separator"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/separator" />
-
-            <TextSwitcher
-                android:id="@+id/feelsLike"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center">
-
-                <TextView
-                    style="@style/MYText"
-                    android:text="Ощущается как\n+136℃"
-                    android:textSize="35sp" />
-
-                <TextView
-                    style="@style/MYText"
-                    android:textSize="35sp" />
-
-            </TextSwitcher>
-
-            <View
-                style="@style/Separator"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/separator" />
-
-
-            <TextSwitcher
-                android:id="@+id/description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center">
-
-                <TextView
-                    style="@style/MYText"
-                    android:text="Переменная облачность"
-                    android:textSize="45sp" />
-
-                <TextView
-                    style="@style/MYText"
-                    android:textSize="45sp" />
-
-            </TextSwitcher>
-
-            <View
-                style="@style/Separator"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="15dp"
-                android:background="@drawable/separator" />
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
                 android:orientation="vertical">
+
+                <TextSwitcher
+                    android:id="@+id/temp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
+
+                    <TextView
+                        style="@style/MYText"
+                        android:text="+36℃"
+                        android:textSize="65sp" />
+
+                    <TextView
+                        style="@style/MYText"
+                        android:textSize="65sp" />
+
+                </TextSwitcher>
+
+                <View
+                    style="@style/Separator"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/separator" />
+
+                <TextSwitcher
+                    android:id="@+id/feelsLike"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
+
+                    <TextView
+                        style="@style/MYText"
+                        android:text="Ощущается как\n+136℃"
+                        android:textSize="35sp" />
+
+                    <TextView
+                        style="@style/MYText"
+                        android:textSize="35sp" />
+
+                </TextSwitcher>
+
+                <View
+                    style="@style/Separator"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/separator" />
+
+
+                <TextSwitcher
+                    android:id="@+id/description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center">
+
+                    <TextView
+                        style="@style/MYText"
+                        android:text="Переменная облачность"
+                        android:textSize="45sp" />
+
+                    <TextView
+                        style="@style/MYText"
+                        android:textSize="45sp" />
+
+                </TextSwitcher>
+
+                <View
+                    style="@style/Separator"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@drawable/separator" />
+
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="325dp"
@@ -219,23 +220,8 @@
 
             </LinearLayout>
 
-        </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
 
-
-    </androidx.core.widget.NestedScrollView>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="83dp" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="425dp" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

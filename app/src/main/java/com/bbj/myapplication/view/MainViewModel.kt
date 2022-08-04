@@ -3,24 +3,27 @@ package com.bbj.myapplication.view
 import android.app.Application
 import android.os.Handler
 import android.os.Looper
+import android.widget.Toast
 import androidx.lifecycle.*
 import com.bbj.myapplication.R
 import com.bbj.myapplication.data.SharedPreferenceClient
 import com.bbj.myapplication.data.WeatherModel
 import com.bbj.myapplication.util.NameLanguage
+import com.bbj.myapplication.util.NetworkCheck
+import com.bbj.myapplication.util.ResultStates
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
-    
+
     private val getTodayForecastUseCase = (application as MainApplication).appComponent.getForecastUseCase()
 
     private val prefClient by lazy {SharedPreferenceClient(application)}
 
-    private val _liveForecast = MutableLiveData<WeatherModel>()
-    val liveForecast: LiveData<WeatherModel>
+    private val _liveForecast = MutableLiveData<ResultStates>()
+    val liveForecast: LiveData<ResultStates>
         get() = _liveForecast
 
     private val _liveGif = MutableLiveData<Int>()
@@ -32,20 +35,35 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val warmGifArray = arrayListOf<Int>(R.drawable.warm_panda_1,R.drawable.warm_panda_2,R.drawable.dance_unihorn,R.drawable.dance_unicorn_2)
     private val coldGifArray = arrayListOf<Int>(R.drawable.cold_bugcat,R.drawable.cold_panda,R.drawable.cold_penguin)
     private val random = Random()
+    
+    var isAPIKeySetted : Boolean = false
 
-    private val coroutineExceptionHandler = CoroutineExceptionHandler{_, throwable ->
-        throwable.printStackTrace()
+    fun setAPIKey(apiKey : String){
+        getTodayForecastUseCase.setAPIKey(apiKey)
+        isAPIKeySetted = true
     }
 
-
-    fun getTodayForecast() {
-        viewModelScope.launch(Dispatchers.IO + coroutineExceptionHandler) {
-            val weather = getTodayForecastUseCase.execute(prefClient.getCityName(NameLanguage.EN))
-            val chosenGIF = chooseGifAnim(weather)
-            Handler(Looper.getMainLooper()).post{
-                _liveForecast.value = weather
-                _liveGif.value = chosenGIF
+    fun getTodayForecast(necessaryUpdateGif : Boolean = true) {
+        if (NetworkCheck.isOnline(getApplication())) {
+            viewModelScope.launch(Dispatchers.IO) {
+                try {
+                    val weather =
+                        getTodayForecastUseCase.execute(prefClient.getCityName(NameLanguage.EN))
+                    val chosenGIF = chooseGifAnim(weather)
+                    Handler(Looper.getMainLooper()).post {
+                        _liveForecast.value = ResultStates.Success(weather)
+                        if (necessaryUpdateGif)
+                            _liveGif.value = chosenGIF
+                    }
+                } catch (e : Exception){
+                    Handler(Looper.getMainLooper()).post {
+                        _liveForecast.value = ResultStates.Error(e.localizedMessage
+                            ?: "Неизвестная ошибка")
+                    }
+                }
             }
+        } else {
+            _liveForecast.value = ResultStates.Error("Не удалось получить данные из сети")
         }
     }
 

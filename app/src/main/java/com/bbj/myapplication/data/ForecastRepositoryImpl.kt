@@ -15,6 +15,7 @@ class ForecastRepositoryImpl @Inject constructor
     (private val databaseDAO: DatabaseDAO, private val retrofitDAO: RetrofitDAO?) :
     ForecastRepository {
 
+    private var apiKey : String = ""
     private val dateFormatter = SimpleDateFormat("dd-MM-yy", Locale.US)
     private val today = dateFormatter.format(Date())
 
@@ -27,24 +28,28 @@ class ForecastRepositoryImpl @Inject constructor
         500
     )
 
+    override fun setAPIKey(apiKey: String) {
+        this.apiKey = apiKey
+    }
+
     override suspend fun getTodayWeatherForecast(cityName: String): WeatherModel {
         val resultFromDB = databaseDAO.getByDate(today)
         val resultWeatherModel : WeatherModel
         Log.d("TAG", "CITYNAME === $cityName")
         if (resultFromDB.isEmpty()) {
-            val weatherModel = getWeatherModelByRetrofit(cityName)
+            val weatherModel = getWeatherModelByRetrofit(cityName,apiKey)
             Log.d("TAG", "Result empty Rep get from web = ${weatherModel}")
             if (weatherModel.temp != 404.0) {
                 databaseDAO.insertWithRefresh(DatabaseModel(today,cityName,weatherModel,0))
             }
             resultWeatherModel = weatherModel
         } else {
-            val currentForecast = containsForecastForCity(resultFromDB, cityName)
+            val currentForecast = getForecastForCity(resultFromDB, cityName)
             if (currentForecast != null) {
                 Log.d("TAG", "Rep get from db = ${currentForecast.weatherModel}")
                 resultWeatherModel = currentForecast.weatherModel
             } else {
-                val weatherModel = getWeatherModelByRetrofit(cityName)
+                val weatherModel = getWeatherModelByRetrofit(cityName,apiKey)
                 Log.d("TAG", "Result not empty Rep get from web = ${weatherModel}")
                 if (weatherModel.temp != 404.0) {
                     databaseDAO.insert(DatabaseModel(today,cityName, weatherModel,0))
@@ -55,9 +60,9 @@ class ForecastRepositoryImpl @Inject constructor
         return resultWeatherModel
     }
 
-
-    private suspend fun getWeatherModelByRetrofit(cityName: String): WeatherModel {
-        val response = retrofitDAO?.getForecastFromWeb(cityName)
+    //Get data from web
+    private suspend fun getWeatherModelByRetrofit(cityName: String, apiKey : String): WeatherModel {
+        val response = retrofitDAO?.getForecastFromWeb(cityName,apiKey)
         if (response!!.isSuccessful) {
             val resultFromWeb = response.body()
             delay(1500)
@@ -80,7 +85,8 @@ class ForecastRepositoryImpl @Inject constructor
         )
     }
 
-    private fun containsForecastForCity(
+    //Search current city in list
+    private fun getForecastForCity(
         resultList: List<DatabaseModel>,
         cityName: String
     ): DatabaseModel? {

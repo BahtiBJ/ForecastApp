@@ -6,4 +6,5 @@ interface ForecastRepository {
 
     suspend fun getTodayWeatherForecast(cityName : String): WeatherModel
 
+    fun setAPIKey(apiKey: String)
 }

@@ -12,6 +12,7 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.lifecycle.ViewModelProvider
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.viewpager2.widget.ViewPager2
 import com.airbnb.lottie.LottieAnimationView
 import com.bbj.myapplication.R
@@ -22,18 +23,37 @@ import pl.droidsonroids.gif.GifImageView
 
 class MainActivity : AppCompatActivity() {
 
-    val viewPager: ViewPager2 by lazy { findViewById(R.id.main_view_pager) }
-    val gifView: GifImageView by lazy { findViewById(R.id.gif_anim) }
-    val fadeOutAnim by lazy { AnimationUtils.loadAnimation(this, R.anim.fade_out) }
+    private val viewPager: ViewPager2 by lazy { findViewById(R.id.main_view_pager) }
+    private val gifView: GifImageView by lazy { findViewById(R.id.gif_anim) }
+    private val fadeOutAnim by lazy { AnimationUtils.loadAnimation(this, R.anim.fade_out) }
     lateinit var primaryToTab: Array<ColorDrawable>
     lateinit var tabToPrimary: Array<ColorDrawable>
-    val handlerMain = Handler(Looper.getMainLooper())
+    private val handlerMain = Handler(Looper.getMainLooper())
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        viewModel.liveGif.observe(this) {
+            if (it != 0) {
+                handlerMain.postDelayed({
+                    showGIF(it)
+                }, 1000)
+            }
+        }
+
+        viewModel.setAPIKey("f86f377fe5e7e05ab27c252568e0d218")
+
+        val viewPager: ViewPager2 = findViewById(R.id.main_view_pager)
+        viewPager.adapter = MainPagerAdapter(supportFragmentManager, lifecycle)
+        viewPager.isUserInputEnabled = false
+
+        tuneTabs()
+    }
+
+    private fun tuneTabs(){
         primaryToTab = arrayOf(
             ColorDrawable(resources.getColor(R.color.colorPrimary, theme)),
             ColorDrawable(resources.getColor(R.color.colorTabs, theme))
@@ -45,26 +65,12 @@ class MainActivity : AppCompatActivity() {
         )
         val transitionToPrimary = TransitionDrawable(tabToPrimary)
 
-        val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        viewModel.liveGif.observe(this) {
-            if (it != 0) {
-                handlerMain.postDelayed({
-                    showGIF(it)
-                }, 1000)
-            }
-        }
-
         val customTab1: View? =
             LayoutInflater.from(this).inflate(R.layout.custom_tab_forecast, null)
         val tabForecastLottieAnim: LottieAnimationView? =
             customTab1?.findViewById(R.id.tab_forecast)
-
         val customTab2: View? = LayoutInflater.from(this).inflate(R.layout.custom_tab_plot, null)
         val tabPlotLottieAnim: LottieAnimationView? = customTab2?.findViewById(R.id.tab_plot)
-
-        val viewPager: ViewPager2 = findViewById(R.id.main_view_pager)
-        viewPager.adapter = MainPagerAdapter(supportFragmentManager, lifecycle)
-        viewPager.isUserInputEnabled = false
 
         val tabLayout: TabLayout = findViewById(R.id.tabLayout)
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
