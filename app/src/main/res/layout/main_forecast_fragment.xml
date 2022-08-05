@@ -82,7 +82,7 @@
 
                     <TextView
                         style="@style/MYText"
-                        android:text="Ощущается как\n+136℃"
+                        android:text="Ощущается как\n+36℃"
                         android:textSize="35sp" />
 
                     <TextView
@@ -174,7 +174,7 @@
                         android:id="@+id/humidity"
                         style="@style/MYText"
                         android:layout_margin="15dp"
-                        android:text="Влажность 123%"
+                        android:text="Влажность 23%"
                         android:textSize="30sp" />
 
                 </androidx.cardview.widget.CardView>

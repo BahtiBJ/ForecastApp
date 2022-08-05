@@ -44,7 +44,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.setAPIKey("f86f377fe5e7e05ab27c252568e0d218")
+        //Set Api key
+        //-------------------------------
+        //viewModel.setAPIKey(   )
+        //-------------------------------
+
 
         val viewPager: ViewPager2 = findViewById(R.id.main_view_pager)
         viewPager.adapter = MainPagerAdapter(supportFragmentManager, lifecycle)
