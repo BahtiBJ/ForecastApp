@@ -1,12 +1,12 @@
 package com.bbj.myapplication.data
 
 import android.content.Context
-import com.bbj.myapplication.util.Constants
 import com.bbj.myapplication.util.NameLanguage
 
 const val prefName = "default"
 const val prefCityKey = "cityName"
 const val nurSultan = "Nur-Sultan/Нур-Султан"
+const val prefApiKey = "apiKey"
 
 class SharedPreferenceClient(context: Context) {
 
@@ -21,6 +21,15 @@ class SharedPreferenceClient(context: Context) {
 
     fun setCityName(name : String){
         preferenceEditor.putString(prefCityKey,name).apply()
+    }
+
+    fun getApiKey() : String{
+        return sharedPreferences.getString(prefApiKey,"") ?: ""
+    }
+
+
+    fun setApiKey(apiKey : String){
+        preferenceEditor.putString(prefApiKey,apiKey).apply()
     }
 
 }

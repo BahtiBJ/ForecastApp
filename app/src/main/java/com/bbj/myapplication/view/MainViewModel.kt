@@ -3,7 +3,6 @@ package com.bbj.myapplication.view
 import android.app.Application
 import android.os.Handler
 import android.os.Looper
-import android.widget.Toast
 import androidx.lifecycle.*
 import com.bbj.myapplication.R
 import com.bbj.myapplication.data.SharedPreferenceClient
@@ -11,7 +10,6 @@ import com.bbj.myapplication.data.WeatherModel
 import com.bbj.myapplication.util.NameLanguage
 import com.bbj.myapplication.util.NetworkCheck
 import com.bbj.myapplication.util.ResultStates
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
@@ -36,14 +34,23 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val coldGifArray = arrayListOf<Int>(R.drawable.cold_bugcat,R.drawable.cold_panda,R.drawable.cold_penguin)
     private val random = Random()
     
-    var isAPIKeySetted : Boolean = false
+    private var hasAPIKey : Boolean = false
 
     fun setAPIKey(apiKey : String){
         getTodayForecastUseCase.setAPIKey(apiKey)
-        isAPIKeySetted = true
+        hasAPIKey = true
+    }
+
+    fun isAPIKeySetted() : Boolean{
+        hasAPIKey = SharedPreferenceClient(getApplication()).getApiKey() != ""
+        return hasAPIKey
     }
 
     fun getTodayForecast(necessaryUpdateGif : Boolean = true) {
+        if (!hasAPIKey){
+            _liveForecast.value = ResultStates.Error("API ключ не установлен")
+            return
+        }
         if (NetworkCheck.isOnline(getApplication())) {
             viewModelScope.launch(Dispatchers.IO) {
                 try {

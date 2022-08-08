@@ -21,7 +21,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import pl.droidsonroids.gif.GifDrawable
 import pl.droidsonroids.gif.GifImageView
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),AskAPIKeyDialog.EnterClickInterface {
 
     private val viewPager: ViewPager2 by lazy { findViewById(R.id.main_view_pager) }
     private val gifView: GifImageView by lazy { findViewById(R.id.gif_anim) }
@@ -29,13 +29,20 @@ class MainActivity : AppCompatActivity() {
     lateinit var primaryToTab: Array<ColorDrawable>
     lateinit var tabToPrimary: Array<ColorDrawable>
     private val handlerMain = Handler(Looper.getMainLooper())
+    private val viewModel by lazy { ViewModelProvider(this).get(MainViewModel::class.java) }
 
+
+    override fun enter(apiKey: String) {
+        viewModel.setAPIKey(apiKey.replace(" ",""))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        if (!viewModel.isAPIKeySetted())
+            showAskAPIDialog()
+
         viewModel.liveGif.observe(this) {
             if (it != 0) {
                 handlerMain.postDelayed({
@@ -44,17 +51,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        //Set Api key
-        //-------------------------------
-        //viewModel.setAPIKey(   )
-        //-------------------------------
-
-
         val viewPager: ViewPager2 = findViewById(R.id.main_view_pager)
         viewPager.adapter = MainPagerAdapter(supportFragmentManager, lifecycle)
         viewPager.isUserInputEnabled = false
 
         tuneTabs()
+    }
+
+    private fun showAskAPIDialog(){
+        val askDialog = AskAPIKeyDialog()
+        askDialog.show(supportFragmentManager,"ask")
     }
 
     private fun tuneTabs(){
