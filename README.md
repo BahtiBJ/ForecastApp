@@ -1,21 +1,23 @@
 # ForecastApp
-Android-приложение для показа прогноза погоды в городах Казахстана. 
-# Возможности
+Android application for displaying weather forecasts for the cities of Kazakhstan.
+# Capabilities
 
-Главный экран состоит из 2 страниц, переключение между которыми происходит с помощью анимированных табов(Lottie animations). 
+At startup, a window appears that requests an api key.
+
+The main screen consists of 2 pages, switching between with the help  of animated tabs (Lottie animations).
 
 ![](https://github.com/BahtiBJ/ForecastApp/blob/master/illustration/show_tabs.gif)
 
-На первой странице видно выбранный город, темпретуру, краткое описание, давление, влажность и скорость ветра.
-При отображении данных с сервера в правом нижнем углу в зависимости от температуры и осадков проигрывается определенная анимация.
+The first page contains the selected city, temperature, short description, pressure, density and wind speed.
+When displaying data from the server in the lower right corner, depending on the temperature and precipitation, a certain animation is played.
 
 ![](https://github.com/BahtiBJ/ForecastApp/blob/master/illustration/show_forecast.gif)
 
-На второй странице находится кнопка для выбора города. По нажатии на неё открывается страница со списком доступных городов.
+On the second page there is a button to select a city. Clicking on it opens a page with a list of available cities.
 
 ![](https://github.com/BahtiBJ/ForecastApp/blob/master/illustration/show_list.gif)
 
-# Структура
+# Structure
 
-Получение данных происходит посредством библиотеки Retrofit через API сайта https://openweathermap.org/. Работа с базой данных осуществляется через библиотеку Room.
-В базе данных хранятся прогнозы для городов просмотренных в течение дня. Dependency injection реализовано с помощью Dagger 2.
+Data is received through the Retrofit library via the site API https://openweathermap.org/. Working with the database is carried out through the Room library.
+The database stores forecasts for cities viewed during the day. Dependency injection implemented by Dagger 2.
