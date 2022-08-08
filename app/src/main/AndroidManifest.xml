@@ -14,9 +14,13 @@
         android:theme="@style/Theme.ForecastApp">
         <activity
             android:name=".view.CityListActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation"
             android:exported="false" />
         <activity
             android:name=".view.MainActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
